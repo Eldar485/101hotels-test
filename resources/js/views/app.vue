@@ -18,7 +18,7 @@
                     <comment @delete="deleteComment($event)" v-for="comment in pagination" :key="comment.id"
                              :comment="comment"></comment>
                 </div>
-                <div class="comments__pagination">
+                <div class="comments__pagination" v-if="getTotalCommentsCount > 0">
                     <div class="comments__page" @click="selectPage('prev')"><</div>
                     <div class="comments__page"
                          v-for="page in getTotalPages"
@@ -66,7 +66,10 @@ export default {
         checkForm(e) {
             e.preventDefault();
             if (this.message.name !== '' && this.message.text !== '' && this.message.date !== '') {
-                this.sendComment()
+                this.sendComment();
+                this.message.name = '';
+                this.message.text = '';
+                this.message.date = '';
                 return
             }
             if (this.message.name === '') {
@@ -117,6 +120,9 @@ export default {
         },
         getPage() {
             return store.getters["comments/getPage"]
+        },
+        getTotalCommentsCount() {
+            return store.getters["comments/getTotalCommentsCount"]
         },
         getComments() {
             return store.getters["comments/getComments"]
@@ -311,6 +317,7 @@ body {
 }
 .mx-datepicker-main, .mx-datepicker-popup {
     background: #ffffff;
+    cursor: pointer;
 }
 
 @media (max-width: 850px) {
